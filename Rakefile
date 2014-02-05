@@ -4,6 +4,14 @@ require 'os'
 
 desc "Clear Screenshot dir"
 task :clear_screenshots do
+  
+  #OS check
+  if OS.mac?
+    error_message = "This Rake task is only for OSX"
+    log "remove_screenshots.log", Logger::ERROR, error_message
+    raise error_message 
+  end
+
   screenshot_path = `defaults read com.apple.screencapture location`
   screenshot_path.delete!("\n")
   

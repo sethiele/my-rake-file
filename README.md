@@ -2,7 +2,7 @@
 
 ## rake clear_screenshots
 
-Löscht Screenshots, die älter als 30 Tage alt sind.
+Löscht Screenshots, die älter als 30 Tage alt sind. __OSX__
 
 `bundle exec clear_screenshots`
 
