@@ -6,7 +6,7 @@ desc "Clear Screenshot dir"
 task :clear_screenshots do
   
   #OS check
-  if OS.mac?
+  unless OS.mac?
     error_message = "This Rake task is only for OSX"
     log "remove_screenshots.log", Logger::ERROR, error_message
     raise error_message 
@@ -28,9 +28,7 @@ task :clear_screenshots do
   files_in_dir.each do |f|
     f_path = screenshot_path + "/" + f
     days_ago = (Date.today - 30).to_time
-    puts "Vor abfrage" + f_path
     if File.ftype(f_path) == "file" && File.extname(f_path) == screenshot_type
-      puts "in Abfrage"
       if File.mtime(f_path) < days_ago
         begin
           File.delete f_path
