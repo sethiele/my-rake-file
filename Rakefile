@@ -2,7 +2,7 @@ require 'date'
 require 'logger'
 require 'os'
 
-desc "Clear Screenshot dir"
+desc "Clear Screenshot dir (try=true)"
 task :clear_screenshots do
   
   #OS check
@@ -15,8 +15,9 @@ task :clear_screenshots do
   screenshot_path = `defaults read com.apple.screencapture location`
   screenshot_path.delete!("\n")
   
-  screenshot_type = `defaults read com.apple.screencapture type`
-  screenshot_type = ( screenshot_type.empty? )? ".png" : "." + screenshot_type.delete("\n")
+  # screenshot_type = `defaults read com.apple.screencapture type`
+  # screenshot_type = ( screenshot_type.empty? )? ".png" : "." + screenshot_type.delete("\n")
+  screenshot_type = ".png"
 
   if screenshot_path.empty? || !File.directory?(screenshot_path)
 
@@ -26,13 +27,17 @@ task :clear_screenshots do
 
   files_in_dir = Dir.entries(screenshot_path)
   files_in_dir.each do |f|
-    f_path = screenshot_path + "/" + f
+    f_path = screenshot_path + f
     days_ago = (Date.today - 30).to_time
     if File.ftype(f_path) == "file" && File.extname(f_path) == screenshot_type
       if File.mtime(f_path) < days_ago
         begin
-          File.delete f_path
-          log "remove_screenshots.log", Logger::INFO, "rm " + f_path
+          if ENV['try']
+            puts "rm " + f_path
+          else
+            File.delete f_path
+            log "remove_screenshots.log", Logger::INFO, "rm " + f_path
+          end
         rescue Exception => e
           log "remove_screenshots.log", Logger::ERROR, "Can't remove #{f_path}: #{e.message}"
         end
